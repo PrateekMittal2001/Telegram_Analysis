@@ -1,9 +1,7 @@
 import configparser
-import json
 import asyncio
 import telethon.errors
 import datetime
-# from datetime import date, datetime
 
 from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError
@@ -27,16 +25,6 @@ username = config['Telegram']['username']
 
 # Create the client and connect
 client = TelegramClient(username, api_id, api_hash)
-
-
-# display the unique messages in the telegram channel
-def getUniqueMessages(list_message, list_message_2):
-    # compare the two lists and return the unique messages
-    messages = []
-    for i in list_message_2:
-        if i not in list_message:
-            messages.append(i)
-    return messages
 
 
 async def main(phone):
@@ -77,8 +65,10 @@ async def main(phone):
 
         list_message = []
 
-        date_of_post = datetime.datetime(2022, 2, 12, 0, 0, 0)
+        # date_of_post = datetime.datetime(2022, 6, 12, 0, 0, 0)
 
+        # start_time = datetime.datetime(2022, 1, 1, 0, 0, 0)
+        # end_time = datetime.datetime(2022, 2, 1, 0, 0, 0)
         # full_msg_list = client.get_messages(my_channel, limit=200, offset_id=200)
         # next_200_list = client.get_messages(my_channel, limit=200, offset_id=full_msg_list[-1].id)
         # print(next_200_list)
@@ -88,8 +78,8 @@ async def main(phone):
             history = await client(GetHistoryRequest(
                 peer=my_channel,
                 offset_id=offset_id,
-                # offset_date=None,
-                offset_date= date_of_post,
+                offset_date=None,
+                # offset_date= date_of_post,
                 add_offset=0,
                 limit=limit,
                 max_id=0,
@@ -104,17 +94,11 @@ async def main(phone):
                 # print only the message content
                 # print(message.date, message.message)
                 list_message.append([message.message, message.date])
-                # uniqueMessage.append(getUniqueMessages(list_message, list_message_2))
-                # list_message_2 = list_message
-                # print(message.message)
             offset_id = messages[len(messages) - 1].id
             total_messages = len(all_messages)
             # print messages from the dictionary all_messages
             if total_count_limit != 0 and total_messages >= total_count_limit:
                 break
-
-        # with open('channel_messages.json', 'w') as outfile:
-        #     json.dump(all_messages, outfile, cls=DateTimeEncoder)
 
         # print(list_message[0])
         # print(list_message[-1])
@@ -122,6 +106,7 @@ async def main(phone):
         # print(list_message[-3])
         print(list_message)
         print(len(list_message))
+
 
 with client:
     client.loop.run_until_complete(main(phone))

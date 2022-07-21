@@ -40,14 +40,16 @@ async def main(phone):
 
     me = await client.get_me()
 
-    user_input_channel = input("enter entity(telegram URL or entity id):")
+    user_channel_list = ["https://t.me/PrateekTestingTelethon"]
 
-    if user_input_channel.isdigit():
-        entity = PeerChannel(int(user_input_channel))
-    else:
-        entity = user_input_channel
+    # iterate over the list of channels
+    for channel_name in user_channel_list:
+        if channel_name.isdigit():
+            entity = PeerChannel(int(channel_name))
+        else:
+            entity = channel_name
 
-    my_channel = await client.get_entity(entity)
+        my_channel = await client.get_entity(entity)
 
     offset = 0
     limit = 100

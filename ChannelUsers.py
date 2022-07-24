@@ -1,6 +1,5 @@
 import configparser
-import json
-import asyncio
+
 
 from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError

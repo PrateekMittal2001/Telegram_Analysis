@@ -6,12 +6,13 @@ from telethon.tl.types import (
     PeerChannel
 )
 
-api_id = 17304508
-api_hash = "1fa688006105dd573df6be757cc4f722"
+# get the telegram credentials
+api_id = 17653083
+api_hash = "2ca12ca71050657b8c71a1621873d7f4"
 
 # get the phone number and username
-phone = +919717020263
-username = "@CoronaVirus1234"
+phone = +919039780234
+username = "@tele_user1221"
 
 # Create the client and connect
 client = TelegramClient(username, api_id, api_hash)
@@ -30,8 +31,20 @@ async def main(phone):
 
     me = await client.get_me()
 
-    user_channel_list = ["https://t.me/teleTestingutkarsh", "https://t.me/Chad_Crypto", "https://t.me/pj69100x",
-                         "https://t.me/Chad_Crypto", "https://t.me/R1C4RD0S4FUC4LLS", "https://t.me/erics_calls"]
+    user_channel_list = ["https://t.me/teleTestingutkarsh", "https://t.me/PrateekTestingTelethon",
+                         "https://t.me/Chad_Crypto", "https://t.me/R1C4RD0S4FUC4LLS", "https://t.me/pj69100x",
+                         "https://t.me/erics_calls", "https://t.me/steezysgems", "https://t.me/KobesCalls",
+                         "https://t.me/+Zx0NSl91_FljYjZh", 'https://t.me/Owl_Calls', 'https://t.me/Maestro007Joe',
+                         'https://t.me/prince_calls', 'https://t.me/ZizzlesTrapHouse',
+                         'https://t.me/mrbeast6000calls/10', 'https://t.me/venomcalls', 'https://t.me/Caesars_Calls',
+                         'https://t.me/medusacalls', 'https://t.me/CowboyCallz', 'https://t.me/Kingdom_X100_CALLS',
+                         'https://t.me/MarkGems',
+                         'https://t.me/gollumsgems', 'https://t.me/SapphireCalls', 'https://t.me/DoxxedChannel',
+                         'https://t.me/bruiserscalls', 'https://t.me/FatApeCalls', 'https://t.me/gubbinscalls',
+                         'https://t.me/ValhallaCalls', 'https://t.me/TheSolitaireRoom',
+                         'https://t.me/+Zx0NSl91_FljYjZh', 'https://t.me/steezysgems', 'https://t.me/KobesCalls',
+                         'https://t.me/Chad_Crypto', 'https://t.me/+ZVqgZ6EDWlFiZGFl', 'https://t.me/erics_calls',
+                         'https://t.me/R1C4RD0S4FUC4LLS']
 
     # iterate over the list of channels
     for channel_name in user_channel_list:

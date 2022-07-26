@@ -1,8 +1,12 @@
+import re
+
+import asyncio
 from telethon import TelegramClient, events
-from telethon.errors import SessionPasswordNeededError
+from telethon.errors import SessionPasswordNeededError, FloodWaitError
+from telethon.tl.functions.channels import JoinChannelRequest
+
 from constants import *
 import cryptg
-
 
 # get the telegram credentials
 api_id = 17653083
@@ -12,9 +16,61 @@ api_hash = "2ca12ca71050657b8c71a1621873d7f4"
 phone = +919039780234
 username = "@tele_user1221"
 
-
 # Create the client and connect
 client = TelegramClient(username, api_id, api_hash)
+
+filtered_user_channel_list = []
+
+token_symbol = "$"
+
+
+# join channel function
+async def join_channel(channel_list):
+    for channel in channel_list:
+        try:
+            await client(JoinChannelRequest(channel))
+        except FloodWaitError as fwe:
+            print(f'Waiting for {fwe}')
+            await asyncio.sleep(delay=fwe.seconds)
+
+
+# join_channel(user_channel_list)
+
+
+# function to filter the user_channel_list
+def filter_user_channel_list(user_channel_list):
+    list_sliced = []
+    for i in user_channel_list:
+        # split the names using /
+        sliced = i.split("/")
+        sliced = "@" + sliced[-1]
+        list_sliced.append(sliced)
+    set_sliced = set(list_sliced)
+    list_sliced = list(set_sliced)
+    return list_sliced
+
+
+filtered_user_channel_list = filter_user_channel_list(user_channel_list)
+
+
+def filter_token_from_message(message):
+    if token_symbol in message:
+        message = message.split(token_symbol)
+        message = message[1]
+        message = message.split(" ")
+        message = message[0]
+        message = "$" + message
+        print(message, "  Token printed")
+        return message
+
+
+def filter_links_from_message(message):
+    # data = re.compile('(?:(?:https?|ftp):\/\/)[\w/\-?=%.]+\.[\w/\-&?=%.]+')
+    # print("message = ", message)
+    data = re.compile('(?:(?:https?|ftp):\/\/)[\w/\-?=%.]+\.[\w/\-&?=%.]+')
+    new = data.findall(message)
+    print(new)
+    return new
 
 
 async def main(phone):
@@ -34,19 +90,22 @@ async def main(phone):
     # use telethon.events.newmessage.NewMessage to stream the new messages
     # @client.on(events.NewMessage(chats="@teleTestingutkarsh", incoming=True, from_users= [@teleTestingutkarsh", "https://t.me/Chad_Crypto", "https://t.me/pj69100x"))
     try:
-        @client.on(events.NewMessage(chats= user_channel_list , incoming=True ))
+        @client.on(events.NewMessage(chats=filtered_user_channel_list, incoming=True))
         # @client.on(events.NewMessage(incoming=True))
         async def handler(event):
-            # print("event :", event)
-            print(event.text)
             textty = event.text
             print(event.message.date)
-            # print(event.message.sender_id)
+            token = filter_token_from_message(textty)
+            print("token = ", token, " Token ended")
+            links = filter_links_from_message(textty)
+            print("links = ", links, " Links ended")
+            # data = re.compile('(?:(?:https?|ftp):\/\/)[\w/\-?=%.]+\.[\w/\-&?=%.]+')
+            # new = data.findall(mess)
+            # print(new)
+            # # print(event.message.sender_id)
             # print the utf id of text
-            if len(textty) != 0:
-                print(ord(textty[0]))
-            else:
-                print("Fuck You Bitch")
+            if len(textty) == 0:
+                print("Ye non text hai, zyada aesthetic ke chode mat bano, chup chaap text bhejo")
             print("\n")
             # await asyncio.sleep(1)
 

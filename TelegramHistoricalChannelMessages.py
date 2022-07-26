@@ -14,28 +14,6 @@ username = "@tele_user1221"
 # Create the client and connect
 client = TelegramClient(username, api_id, api_hash)
 
-user_channel_list = ["https://t.me/teleTestingutkarsh", "https://t.me/PrateekTestingTelethon",
-                     'https://t.me/mrbeast6000calls/10',
-                     "https://t.me/Chad_Crypto", "https://t.me/R1C4RD0S4FUC4LLS", "https://t.me/pj69100x",
-                     "https://t.me/erics_calls", "https://t.me/steezysgems", "https://t.me/KobesCalls",
-                     'https://t.me/Owl_Calls', 'https://t.me/Maestro007Joe',
-                     'https://t.me/prince_calls', 'https://t.me/ZizzlesTrapHouse',
-                     'https://t.me/mrbeast6000calls/10', 'https://t.me/venomcalls', 'https://t.me/Caesars_Calls',
-                     'https://t.me/medusacalls', 'https://t.me/CowboyCallz', 'https://t.me/Kingdom_X100_CALLS',
-                     'https://t.me/MarkGems',
-                     'https://t.me/gollumsgems', 'https://t.me/SapphireCalls', 'https://t.me/DoxxedChannel',
-                     'https://t.me/bruiserscalls', 'https://t.me/FatApeCalls', 'https://t.me/gubbinscalls',
-                     'https://t.me/ValhallaCalls', 'https://t.me/TheSolitaireRoom',
-                     'https://t.me/steezysgems', 'https://t.me/KobesCalls',
-                     'https://t.me/Chad_Crypto', 'https://t.me/+ZVqgZ6EDWlFiZGFl', 'https://t.me/erics_calls',
-                     'https://t.me/R1C4RD0S4FUC4LLS', "https://t.me/+Zx0NSl91_FljYjZh", 'https://t.me/Owl_Calls',
-                     'https://t.me/gumballsgemcalls01', 'https://t.me/gilt_calls', 'https://t.me/MAGICDEFIICALLS',
-                     'https://t.me/TheDonsCalls', 'https://t.me/venomcalls', 'https://t.me/medusacalls',
-                     'https://t.me/DarenCalls', 'https://t.me/Erc20Gods', 'https://t.me/CasasReviews',
-                     'https://t.me/KURUKUNCALLS', 'https://t.me/CallofAngels', 'https://t.me/CallofAngels',
-                     'https://t.me/GEMCALLS11', 'https://t.me/Crizalcalls', 'https://t.me/Natsucalls',
-                     'https://t.me/CallofAngels']
-
 
 async def main(phone):
     global user_channel

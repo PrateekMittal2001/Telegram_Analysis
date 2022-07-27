@@ -1,5 +1,4 @@
 import pymysql
-
 from config import Config
 
 
@@ -23,7 +22,3 @@ class Database:
         """ Execute the query and fetch all data """
         self.execute_query(query=query)
         return self.cursor.fetchall()
-
-
-db = Database(user=Config.DATABASE_USER, password=Config.DATABASE_PASS, host=Config.DATABASE_READ_HOST,
-              port=Config.DATABASE_PORT)

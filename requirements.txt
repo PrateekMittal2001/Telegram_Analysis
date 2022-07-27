@@ -1,3 +1,5 @@
 asyncio~=3.4.3
 Telethon~=1.24.0
-cryptg~=0.3.1
+configparser~=5.2.0
+PyMySQL~=1.0.2
+config~=0.5.1

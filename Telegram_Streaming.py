@@ -1,28 +1,19 @@
 import re
-
+import db_connection
 import asyncio
+from constants import *
+from config import *
 from telethon import TelegramClient, events
 from telethon.errors import SessionPasswordNeededError, FloodWaitError
 from telethon.tl.functions.channels import JoinChannelRequest
-
-from constants import *
-import cryptg
-
-# get the telegram credentials
-api_id = 17653083
-api_hash = "2ca12ca71050657b8c71a1621873d7f4"
-
-# get the phone number and username
-phone = +919039780234
-username = "@tele_user1221"
 
 # Create the client and connect
 client = TelegramClient(username, api_id, api_hash)
 
 filtered_user_channel_list = []
-
 token_symbol = "$"
 
+db = db_connection.db_connection(user=user, password=password, host=host, port=port, db_name=db_name)
 
 # join channel function
 async def join_channel(channel_list):
@@ -60,7 +51,6 @@ def filter_token_from_message(message):
         message = message.split(" ")
         message = message[0]
         message = "$" + message
-        print(message, "  Token printed")
         return message
 
 
@@ -69,7 +59,6 @@ def filter_links_from_message(message):
     # print("message = ", message)
     data = re.compile('(?:(?:https?|ftp):\/\/)[\w/\-?=%.]+\.[\w/\-&?=%.]+')
     new = data.findall(message)
-    print(new)
     return new
 
 
@@ -99,10 +88,7 @@ async def main(phone):
             print("token = ", token, " Token ended")
             links = filter_links_from_message(textty)
             print("links = ", links, " Links ended")
-            # data = re.compile('(?:(?:https?|ftp):\/\/)[\w/\-?=%.]+\.[\w/\-&?=%.]+')
-            # new = data.findall(mess)
-            # print(new)
-            # # print(event.message.sender_id)
+            print(event.message.sender_id)
             # print the utf id of text
             if len(textty) == 0:
                 print("Ye non text hai, zyada aesthetic ke chode mat bano, chup chaap text bhejo")

@@ -2,14 +2,8 @@ from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError
 from telethon.tl.functions.messages import (GetHistoryRequest)
 from telethon.tl.types import (PeerChannel)
-
-# get the telegram credentials
-api_id = 17653083
-api_hash = "2ca12ca71050657b8c71a1621873d7f4"
-
-# get the phone number and username
-phone = +919039780234
-username = "@tele_user1221"
+from config import *
+from constants import *
 
 # Create the client and connect
 client = TelegramClient(username, api_id, api_hash)

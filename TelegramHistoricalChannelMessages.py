@@ -2,7 +2,7 @@ from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError
 from telethon.tl.functions.messages import (GetHistoryRequest)
 from telethon.tl.types import (PeerChannel)
-from config import *
+from configuration_data import *
 from constants import *
 
 # Create the client and connect

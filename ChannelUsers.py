@@ -6,7 +6,7 @@ from telethon.tl.types import (
     PeerChannel
 )
 from constants import *
-from config import *
+from configuration_data import *
 
 
 # Create the client and connect

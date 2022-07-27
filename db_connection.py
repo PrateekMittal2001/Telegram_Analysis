@@ -5,7 +5,7 @@ from config import Config
 class Database:
     def __init__(self, user, password, host, port, db_name):
         """ Initialize the connection and create the cursor object """
-        self._conn = pymysql.connect(user=user, password=password, host=host, port=port, db_name=db_name)
+        self._conn = pymysql.connect(user=user, password=password, host=host, port=port, database=db_name)
         self._cursor = self._conn.cursor()
 
     @property

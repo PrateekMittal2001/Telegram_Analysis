@@ -1,8 +1,8 @@
 import re
-import db_connection
+import db_connection as db
 import asyncio
 from constants import *
-from config import *
+from configuration_data import *
 from telethon import TelegramClient, events
 from telethon.errors import SessionPasswordNeededError, FloodWaitError
 from telethon.tl.functions.channels import JoinChannelRequest
@@ -13,19 +13,37 @@ client = TelegramClient(username, api_id, api_hash)
 filtered_user_channel_list = []
 token_symbol = "$"
 
-db = db_connection.db_connection(user=user, password=password, host=host, port=port, db_name=db_name)
+db = db.Database(user="root", password="", host="localhost", port=3306, db_name="twitter_bot")
+
+
+# filter the channel list to get the unique user channels
+def get_unique_channels(channel_list):
+    channel_list = set(channel_list)
+    channel_list = list(channel_list)
+    return channel_list
+
+
+user_channel_list = get_unique_channels(user_channel_list)
+
 
 # join channel function
+# async def join_channel(channel_list):
+#     for channel in channel_list:
+#         try:
+#             await client(JoinChannelRequest(channel))
+#         except FloodWaitError as fwe:
+#             print(f'Waiting for {fwe}')
+#             asyncio.sleep(delay=fwe.seconds)
 async def join_channel(channel_list):
     for channel in channel_list:
         try:
+            client.flood_sleep_threshold = 0  # Don't auto-sleep
             await client(JoinChannelRequest(channel))
+            print("We fucking joined : ", channel)
+            await asyncio.sleep(delay=4)
         except FloodWaitError as fwe:
             print(f'Waiting for {fwe}')
             await asyncio.sleep(delay=fwe.seconds)
-
-
-# join_channel(user_channel_list)
 
 
 # function to filter the user_channel_list
@@ -66,6 +84,8 @@ async def main(phone):
     global user_channel
     await client.start()
     print("Client Created")
+    # Firstly join the channels for streaming
+    # await join_channel(user_channel_list)
     # Ensure you're authorized
     if not await client.is_user_authorized():
         await client.send_code_request(phone)
@@ -77,25 +97,48 @@ async def main(phone):
     me = await client.get_me()
 
     # use telethon.events.newmessage.NewMessage to stream the new messages
-    # @client.on(events.NewMessage(chats="@teleTestingutkarsh", incoming=True, from_users= [@teleTestingutkarsh", "https://t.me/Chad_Crypto", "https://t.me/pj69100x"))
     try:
         @client.on(events.NewMessage(chats=filtered_user_channel_list, incoming=True))
         # @client.on(events.NewMessage(incoming=True))
         async def handler(event):
             textty = event.text
+            print("Message = ", textty)
+            # print the channel name and the message
+            print("channel id = ", event.chat_id)
+            # using the chat_id print the channel name
             print(event.message.date)
             token = filter_token_from_message(textty)
             print("token = ", token, " Token ended")
             links = filter_links_from_message(textty)
             print("links = ", links, " Links ended")
-            print(event.message.sender_id)
-            # print the utf id of text
+            dexlink = weblink = telelink = "Not Found"
+            if len(links) != 0:
+                for link in links:
+                    if 'dex' in link or 'dextools' in link:
+                        dexlink = link
+                        print("dexlink = ", dexlink)
+                    elif 't.me' in link:
+                        telelink = link
+                        print("telelink = ", telelink)
+                    elif '.com' in link:
+                        weblink = link
+                        print("websitelink = ", weblink)
+                INSERT_DEX_QUERY = INSERT_COIN_DATA_TO_TABLE_QUERY.format(
+                    token=token,
+                    dexlink=dexlink,
+                    telelink=telelink,
+                    weblink=weblink,
+                    date=event.message.date
+                )
+                print("INSERT_DEX_QUERY = ", INSERT_DEX_QUERY)
+                db.insert_data(INSERT_DEX_QUERY)
+                print("Data inserted")
+            else:
+                print("No link found in the message")
+            # print the message is not text
             if len(textty) == 0:
                 print("Ye non text hai, zyada aesthetic ke chode mat bano, chup chaap text bhejo")
             print("\n")
-            # await asyncio.sleep(1)
-
-            # call the event handler to stream the new messages
 
         await client.run_until_disconnected()
 

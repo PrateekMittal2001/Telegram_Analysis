@@ -26,14 +26,6 @@ def get_unique_channels(channel_list):
 user_channel_list = get_unique_channels(user_channel_list)
 
 
-# join channel function
-# async def join_channel(channel_list):
-#     for channel in channel_list:
-#         try:
-#             await client(JoinChannelRequest(channel))
-#         except FloodWaitError as fwe:
-#             print(f'Waiting for {fwe}')
-#             asyncio.sleep(delay=fwe.seconds)
 async def join_channel(channel_list):
     for channel in channel_list:
         try:
@@ -68,8 +60,9 @@ def filter_token_from_message(message):
         message = message[1]
         message = message.split(" ")
         message = message[0]
-        message = "$" + message
-        return message
+        if not message.isdigit():
+            message = "$" + message
+            return message
 
 
 def filter_links_from_message(message):
@@ -101,6 +94,7 @@ async def main(phone):
         @client.on(events.NewMessage(chats=filtered_user_channel_list, incoming=True))
         # @client.on(events.NewMessage(incoming=True))
         async def handler(event):
+            print(event)
             textty = event.text
             print("Message = ", textty)
             # print the channel name and the message
@@ -111,10 +105,12 @@ async def main(phone):
             print("token = ", token, " Token ended")
             links = filter_links_from_message(textty)
             print("links = ", links, " Links ended")
-            dexlink = weblink = telelink = "Not Found"
+            dexlink = weblink = telelink = tweetlink = "Not Found"
             if len(links) != 0:
                 for link in links:
-                    if 'dex' in link or 'dextools' in link:
+                    if "twitter" in link:
+                        tweetlink = link
+                    elif 'dextools' in link or 'dextools' in link:
                         dexlink = link
                         print("dexlink = ", dexlink)
                     elif 't.me' in link:
@@ -123,15 +119,14 @@ async def main(phone):
                     elif '.com' in link:
                         weblink = link
                         print("websitelink = ", weblink)
-                INSERT_DEX_QUERY = INSERT_COIN_DATA_TO_TABLE_QUERY.format(
+                a = INSERT_COIN_DATA_TO_TABLE.format(
                     token=token,
                     dexlink=dexlink,
                     telelink=telelink,
                     weblink=weblink,
-                    date=event.message.date
+                    twitterlink =tweetlink
                 )
-                print("INSERT_DEX_QUERY = ", INSERT_DEX_QUERY)
-                db.insert_data(INSERT_DEX_QUERY)
+                db.execute_query(a)
                 print("Data inserted")
             else:
                 print("No link found in the message")

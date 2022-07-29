@@ -18,7 +18,7 @@ user_channel_list = ["https://t.me/teleTestingutkarsh", "https://t.me/PrateekTes
                      'https://t.me/KURUKUNCALLS', 'https://t.me/CallofAngels', 'https://t.me/CallofAngels',
                      'https://t.me/GEMCALLS11',  'https://t.me/Natsucalls',
                      'https://t.me/CallofAngels', 'https://t.me/kermitcall', 'https://t.me/MoonDefiiCall',
-                     'https://t.me/Ghilliegamble', 'https://t.me/ValhallaCalls', 'https://t.me/zombiecalls1',
+                     'https://t.me/ValhallaCalls', 'https://t.me/zombiecalls1',
                      'https://t.me/Gon_Calls', 'https://t.me/MidnightCallss', 'https://t.me/Conan_calls',
                      'https://t.me/NINJA_CALL', 'https://t.me/escobarcalls100x', 'https://t.me/GRIZZLYCALLSS',
                      'https://t.me/ihzanswhaleschool', 'https://t.me/Lightingcalls', 'https://t.me/Apeology',
@@ -29,7 +29,8 @@ user_channel_list = ["https://t.me/teleTestingutkarsh", "https://t.me/PrateekTes
 
 
 not_working_channel_list = ["https://t.me/mrbeast6000calls/10", 'https://t.me/mrbeast6000calls/10',
-                            'https://t.me/Crizalcalls',
+                            'https://t.me/Crizalcalls', 'https://t.me/Ghilliegamble',
                             'https://t.me/+ZVqgZ6EDWlFiZGFl', "https://t.me/+Zx0NSl91_FljYjZh",]
 
-INSERT_COIN_DATA_TO_TABLE = "INSERT INTO telegram_coin_data (token_name, website_link, dextool_link, telegram_link) VALUES ('{token}', '{websitelink}', '{dexlink}', '{telelink}')"
+
+INSERT_COIN_DATA_TO_TABLE = "INSERT INTO telegram_coin_data (token_name, website_link, dextool_link, telegram_link, twitter_link) VALUES ('{token}', '{weblink}', '{dexlink}', '{telelink}', '{twitterlink}')"

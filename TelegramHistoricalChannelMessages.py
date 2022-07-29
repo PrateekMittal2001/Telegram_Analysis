@@ -48,7 +48,7 @@ async def main(phone):
             my_channel = await client.get_entity(entity)
 
             offset_id = 0
-            limit = 1000000
+            limit = 100
             all_messages = []
             total_messages = 0
             total_count_limit = 0

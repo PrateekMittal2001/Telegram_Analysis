@@ -1,3 +1,5 @@
+import asyncio
+
 from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError
 from telethon.tl.functions.messages import (GetHistoryRequest)
@@ -53,6 +55,8 @@ async def main(phone):
             total_messages = 0
             total_count_limit = 0
             list_message = []
+
+            await asyncio.sleep(2)
 
             while True:
                 # print("Current Offset ID is:", offset_id, "; Total Messages:", total_messages)

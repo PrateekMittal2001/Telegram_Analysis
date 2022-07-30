@@ -34,3 +34,5 @@ not_working_channel_list = ["https://t.me/mrbeast6000calls/10", 'https://t.me/mr
 
 
 INSERT_COIN_DATA_TO_TABLE = "INSERT INTO telegram_coin_data (token_name, website_link, dextool_link, telegram_link, twitter_link) VALUES ('{token}', '{weblink}', '{dexlink}', '{telelink}', '{twitterlink}')"
+GET_JOINING_LINKS = "SELECT * FROM telegram_channels;"
+INSERT_LINK_TO_TABLE = "INSERT INTO telegram_channels (channel_link, joining_status) VALUES ('{joining_link}', '{joining_status}');"

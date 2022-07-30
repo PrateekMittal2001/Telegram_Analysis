@@ -1,18 +1,21 @@
+import re
+
+import db_connection as db
 from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError
-import re, itertools
-# api_id and api_hash
-api_id = 10468333
-api_hash = "eab47309851da605d388b9ceee93acaf"
 
-# get the phone number and username
-phone = +918860377197
-username = '@Gojo_2001'
+from configuration_data import *
+from constants import *
+
+# api_id and api_hash
 
 # Create the client and connect
 client = TelegramClient(username, api_id, api_hash)
 search_matrix = ["https://t.me/", "https://telegram.me/"]
 links = []
+
+db = db.Database(user="root", password="", host="localhost", port=3306, db_name="twitter_bot")
+
 
 async def main(phone):
     global user_channel
@@ -32,7 +35,7 @@ async def main(phone):
     list_message = []
 
     try:
-        async for message in client.iter_messages(1595324055):
+        async for message in client.iter_messages(1055173630):
             # print(message.text)
             # if the message contains https://t.me/ or https://telegram.me/ copy the message and save it in list
             # list_message
@@ -47,7 +50,22 @@ async def main(phone):
                         links.append(url[0][0])
                         print([x[0] for x in url])
                 #         a = list(itertools.chain(*url))
-        print(links)
+        print(links, "links ended\n")
+        # get the links from the database
+        link_in_database = db.fetchall(GET_JOINING_LINKS)
+        print(link_in_database, "link in database\n")
+        for link in links:
+            if link in search_matrix:
+                print(link, "this is link")
+                if link in link_in_database:
+                    print(link, "is in the database")
+                else:
+                    print(link, "is not in the database")
+                    b = INSERT_LINK_TO_TABLE.format(joining_link=link, joining_status="not_joined")
+                    db.execute_query(b)
+                    print(link, "is inserted to database")
+
+
     except Exception as e:
         print(e, "Some error occured")
 

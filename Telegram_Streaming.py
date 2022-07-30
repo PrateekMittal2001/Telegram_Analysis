@@ -1,6 +1,7 @@
 import re
 import db_connection as db
 import asyncio
+import csv
 from constants import *
 from configuration_data import *
 from telethon import TelegramClient, events
@@ -24,6 +25,21 @@ def get_unique_channels(channel_list):
 
 
 user_channel_list = get_unique_channels(user_channel_list)
+
+filename = "channels.csv"
+
+
+# def non_joined_channels(channel_list):
+#     #open file in read write mode
+#     with open (filename, 'r+') as f:
+#         reader = csv.reader(f)
+#         data = list(reader)
+#         print(data)
+#         for channel in channel_list:
+#             if channel
+
+
+non_joined_channels(user_channel_list)
 
 
 async def join_channel(channel_list):
@@ -78,7 +94,7 @@ async def main(phone):
     await client.start()
     print("Client Created")
     # Firstly join the channels for streaming
-    # await join_channel(user_channel_list)
+    await join_channel(user_channel_list)
     # Ensure you're authorized
     if not await client.is_user_authorized():
         await client.send_code_request(phone)
@@ -124,7 +140,7 @@ async def main(phone):
                     dexlink=dexlink,
                     telelink=telelink,
                     weblink=weblink,
-                    twitterlink =tweetlink
+                    twitterlink=tweetlink
                 )
                 db.execute_query(a)
                 print("Data inserted")

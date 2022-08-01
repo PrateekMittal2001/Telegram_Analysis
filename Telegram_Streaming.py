@@ -39,7 +39,7 @@ filename = "channels.csv"
 #             if channel
 
 
-non_joined_channels(user_channel_list)
+# non_joined_channels(user_channel_list)
 
 
 async def join_channel(channel_list):
@@ -94,7 +94,7 @@ async def main(phone):
     await client.start()
     print("Client Created")
     # Firstly join the channels for streaming
-    await join_channel(user_channel_list)
+    # await join_channel(user_channel_list)
     # Ensure you're authorized
     if not await client.is_user_authorized():
         await client.send_code_request(phone)
@@ -142,13 +142,13 @@ async def main(phone):
                     weblink=weblink,
                     twitterlink=tweetlink
                 )
-                db.execute_query(a)
+                # db.execute_query(a)
                 print("Data inserted")
             else:
                 print("No link found in the message")
             # print the message is not text
             if len(textty) == 0:
-                print("Ye non text hai, zyada aesthetic ke chode mat bano, chup chaap text bhejo")
+                print("Ye non text hai, chup chaap text bhejo")
             print("\n")
 
         await client.run_until_disconnected()

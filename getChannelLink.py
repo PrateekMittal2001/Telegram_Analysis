@@ -55,16 +55,18 @@ async def main(phone):
         link_in_database = db.fetchall(GET_JOINING_LINKS)
         print(link_in_database, "link in database\n")
         for link in links:
-            if link in search_matrix:
-                print(link, "this is link")
-                if link in link_in_database:
-                    print(link, "is in the database")
-                else:
-                    print(link, "is not in the database")
-                    b = INSERT_LINK_TO_TABLE.format(joining_link=link, joining_status="not_joined")
-                    db.execute_query(b)
-                    print(link, "is inserted to database")
-
+            print(link, "link\n")
+            flag = 0
+            for i in search_matrix:
+                if i in link:
+                    print(link, "this is link")
+                    if link in link_in_database:
+                        print(link, "is in the database")
+                    else:
+                        print(link, "is not in the database")
+                        b = INSERT_LINK_TO_TABLE.format(joining_link=link, joining_status="not_joined")
+                        db.execute_query(b)
+                        print(link, "is inserted to database")
 
     except Exception as e:
         print(e, "Some error occured")

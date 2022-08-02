@@ -1,4 +1,4 @@
-user_channel_list = ["https://t.me/teleTestingutkarsh", "https://t.me/PrateekTestingTelethon",
+user_channel_list = ["https://t.me/PrateekTestingTelethon", "https://t.me/teleTestingutkarsh",
                      "https://t.me/Chad_Crypto", "https://t.me/R1C4RD0S4FUC4LLS", "https://t.me/pj69100x",
                      "https://t.me/erics_calls", "https://t.me/steezysgems", "https://t.me/KobesCalls",
                      'https://t.me/Owl_Calls', 'https://t.me/Maestro007Joe',

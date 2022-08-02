@@ -58,6 +58,7 @@ async def main(phone):
 
             await asyncio.sleep(2)
 
+            print(my_channel)
             while True:
                 # print("Current Offset ID is:", offset_id, "; Total Messages:", total_messages)
                 try:
@@ -85,13 +86,7 @@ async def main(phone):
                 if total_count_limit != 0 and total_messages >= total_count_limit:
                     break
 
-            print(list_message[0])
-            print(list_message[1])
-            print(list_message[2])
-            print(list_message[-1])
-            print(list_message[-2])
-            print(list_message[-3])
-            # print(list_message)
+            print(list_message)
             print(len(list_message))
             print(iii)
             iii += 1

@@ -1,6 +1,4 @@
 import pymysql
-from config import Config
-
 
 class Database:
     def __init__(self, user, password, host, port, db_name):

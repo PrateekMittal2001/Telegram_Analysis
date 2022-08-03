@@ -25,21 +25,6 @@ async def main(phone):
 
     me = await client.get_me()
 
-    # check the user channel from CheckChatInviteRequest
-    # for user_channel in user_channel_list:
-    #     print(user_channel)
-    #     response = client.invoke(ResolveUsernameRequest(user_channel))
-    #     print(response.chats[0].access_hash)
-    #     # check the user channel from CheckChatInviteRequest
-    #     try:
-    #         await client(GetHistoryRequest(PeerChannel(int(user_channel[-10:])), 0, 0, 0, 0, 0, 0))
-    #         print("Success")
-    #     except:
-    #         print("Failed")
-    #         continue
-
-
-    iii = 0
     # iterate over the list of channels
     for channel_name in user_channel_list:
         if channel_name.isdigit():
@@ -86,10 +71,8 @@ async def main(phone):
                 if total_count_limit != 0 and total_messages >= total_count_limit:
                     break
 
-            print(list_message)
+            # print(list_message)
             print(len(list_message))
-            print(iii)
-            iii += 1
 
         except Exception as e:
             print("Exception : ", e)

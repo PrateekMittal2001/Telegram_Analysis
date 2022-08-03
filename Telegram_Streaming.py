@@ -1,7 +1,6 @@
 import re
 import db_connection as db
 import asyncio
-import csv
 from constants import *
 from configuration_data import *
 from telethon import TelegramClient, events

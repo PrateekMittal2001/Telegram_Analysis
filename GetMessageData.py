@@ -1,4 +1,7 @@
+import asyncio
+
 from telethon.tl.functions.messages import GetMessagesViewsRequest
+from telethon.tl.functions.photos import GetUserPhotosRequest
 from telethon.tl.types import PeerChannel
 
 from constants import *
@@ -24,52 +27,67 @@ async def main(phone):
 
     me = await client.get_me()
 
-    # set the floodwait to 0
+    # set the flood sleep threshold to 0
     client.flood_sleep_threshold = 0
 
-    # for channel_name in user_channel_list:
-    channel_name = user_channel_list[1]
-    if channel_name.isdigit():
-        entity = PeerChannel(int(channel_name))
-    else:
-        entity = channel_name
-    my_channel = await client.get_entity(entity)
+    for channel_name in user_channel_list:
+        # channel_name = user_channel_list[1]
+        if channel_name.isdigit():
+            entity = PeerChannel(int(channel_name))
+        else:
+            entity = channel_name
+        my_channel = await client.get_entity(entity)
 
-    # print(my_channel)
-    # print(type(my_channel))
-    message_id = [i for i in range(1, 500)]
+        message_id = [i for i in range(1, 500)]
 
-    try:
-        # while True:
-        details = await client(GetMessagesViewsRequest(
-            peer=my_channel,
-            id=message_id,
-            increment=False,
-        ))
-        # peer="PrateekTestingTelethon", id=message_id, increment=True))
-        # print the number of views of the message
-        print(details)
-        # print(type(details.views))
-        ii = 0
-        for i in details.views:
-            print(ii, i)
-            # print(type(i))
-            ii += 1
-            print("\n")
+        # wait for 10 seconds
+        await asyncio.sleep(1)
+        try:
+            # while True:
+            try:
+                details = await client(GetMessagesViewsRequest(
+                    peer=my_channel,
+                    id=message_id,
+                    increment=True,
+                ))
+            except Exception as e:
+                print(e, "There was an error")
+                continue
 
-    except Exception as e:
-        print(e, "Some error occured")
-        pass
+            photo_object = my_channel.photo
+            print("photo: ", photo_object)
+            # use getfile to get the photo
+            photo_file = await client.download_profile_photo(my_channel)
+            print("photo_file: ", photo_file)
 
-    # get the number of views of a message
-    # for message in my_channel.messages:
-    #     if message.id == message_id:
-    #         response = await client(GetMessagesViewsRequest(
-    #             PeerChannel(int(user_channel[-10:])),
-    #             [message.id]
-    #         ))
-    #         print(response.views)
-    #         break
+            # print(type(my_channel.id))
+            # try:
+            #     channel_image = await client(GetUserPhotosRequest(
+            #         user_id=1330679416,
+            #         offset=0,
+            #         max_id=0,
+            #         limit=100,
+            #     ))
+            # except Exception as e:
+            #     print(e, "There was an error")
+            #     continue
+            #
+            # # print the image url
+            # print(channel_image.stringify())
+
+            # print the number of views of the message
+            # print(details)
+            # # print(type(details.views))
+            # counter = 0
+            # for i in details.views:
+            #     print(counter, i)
+            #     # print(type(i))
+            #     counter += 1
+            #     print("\n")
+
+        except Exception as e:
+            print(e, "Some error occured")
+            pass
 
 
 with client:

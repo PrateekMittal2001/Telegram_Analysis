@@ -1,5 +1,6 @@
 import pymysql
 
+
 class Database:
     def __init__(self, user, password, host, port, db_name):
         """ Initialize the connection and create the cursor object """
@@ -20,3 +21,7 @@ class Database:
         """ Execute the query and fetch all data """
         self.execute_query(query=query)
         return self.cursor.fetchall()
+
+    def commit(self):
+        """ Commit the changes """
+        self._conn.commit()

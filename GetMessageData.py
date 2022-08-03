@@ -1,7 +1,6 @@
 import asyncio
 
 from telethon.tl.functions.messages import GetMessagesViewsRequest
-from telethon.tl.functions.photos import GetUserPhotosRequest
 from telethon.tl.types import PeerChannel
 
 from constants import *
@@ -76,8 +75,8 @@ async def main(phone):
             # print(channel_image.stringify())
 
             # print the number of views of the message
-            # print(details)
-            # # print(type(details.views))
+            print(details)
+            # print(type(details.views))
             # counter = 0
             # for i in details.views:
             #     print(counter, i)

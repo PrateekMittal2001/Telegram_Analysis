@@ -25,21 +25,6 @@ def get_unique_channels(channel_list):
 
 user_channel_list = get_unique_channels(user_channel_list)
 
-filename = "channels.csv"
-
-
-# def non_joined_channels(channel_list):
-#     #open file in read write mode
-#     with open (filename, 'r+') as f:
-#         reader = csv.reader(f)
-#         data = list(reader)
-#         print(data)
-#         for channel in channel_list:
-#             if channel
-
-
-# non_joined_channels(user_channel_list)
-
 
 async def join_channel(channel_list):
     for channel in channel_list:
@@ -54,9 +39,9 @@ async def join_channel(channel_list):
 
 
 # function to filter the user_channel_list
-def filter_user_channel_list(user_channel_list):
+def filter_user_channel_list(channel_list):
     list_sliced = []
-    for i in user_channel_list:
+    for i in channel_list:
         # split the names using /
         sliced = i.split("/")
         sliced = "@" + sliced[-1]

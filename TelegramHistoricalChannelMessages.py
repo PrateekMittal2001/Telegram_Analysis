@@ -72,12 +72,6 @@ async def main(phone):
             if total_count_limit != 0 and total_messages >= total_count_limit:
                 break
 
-        print(list_message)
-        # for list in list_message:
-        #     INSERT_MESSAGE
-        #     print(list[1])
-        #     print("\n")
-        print(len(list_message))
 
     except Exception as e:
         print("Exception : ", e)

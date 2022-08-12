@@ -1,11 +1,10 @@
 import re
-import db_connection as db
-import asyncio
+from db_connection import *
 from constants import *
 from configuration_data import *
 from telethon import TelegramClient, events
-from telethon.errors import SessionPasswordNeededError, FloodWaitError
-from telethon.tl.functions.channels import JoinChannelRequest
+from telethon.tl.types import PeerUser, PeerChat, PeerChannel
+from telethon.errors import SessionPasswordNeededError
 
 # Create the client and connect
 client = TelegramClient(username, api_id, api_hash)
@@ -13,7 +12,7 @@ client = TelegramClient(username, api_id, api_hash)
 filtered_user_channel_list = []
 token_symbol = "$"
 
-db = db.Database(user="root", password="", host="localhost", port=3306, db_name="twitter_bot")
+db = Database(user="root", password="", host="localhost", port=3306, db_name="twitter_bot")
 
 
 # filter the channel list to get the unique user channels
@@ -21,21 +20,6 @@ def get_unique_channels(channel_list):
     channel_list = set(channel_list)
     channel_list = list(channel_list)
     return channel_list
-
-
-user_channel_list = get_unique_channels(user_channel_list)
-
-
-async def join_channel(channel_list):
-    for channel in channel_list:
-        try:
-            client.flood_sleep_threshold = 0  # Don't auto-sleep
-            await client(JoinChannelRequest(channel))
-            print("We fucking joined : ", channel)
-            await asyncio.sleep(delay=4)
-        except FloodWaitError as fwe:
-            print(f'Waiting for {fwe}')
-            await asyncio.sleep(delay=fwe.seconds)
 
 
 # function to filter the user_channel_list
@@ -66,19 +50,34 @@ def filter_token_from_message(message):
 
 
 def filter_links_from_message(message):
-    # data = re.compile('(?:(?:https?|ftp):\/\/)[\w/\-?=%.]+\.[\w/\-&?=%.]+')
-    # print("message = ", message)
     data = re.compile('(?:(?:https?|ftp):\/\/)[\w/\-?=%.]+\.[\w/\-&?=%.]+')
     new = data.findall(message)
     return new
+
+
+def get_pair_id_from_dex(dexlink):
+    dexlink = dexlink.split("/")
+    if len(dexlink[-1]) > 1:
+        dexlink = dexlink[-1]
+    else:
+        dexlink = dexlink[-2]
+    return dexlink
+
+
+def get_token_symbol(token):
+    symbol = db.fetchall(GET_TOKEN_SYMBOL.format(pair_id=token))
+    print("symbol = ", symbol)
+    if len(symbol) == 0:
+        symbol = "Not Found"
+        return "Not_Found"
+    else:
+        return symbol[0][0]
 
 
 async def main(phone):
     global user_channel
     await client.start()
     print("Client Created")
-    # Firstly join the channels for streaming
-    # await join_channel(user_channel_list)
     # Ensure you're authorized
     if not await client.is_user_authorized():
         await client.send_code_request(phone)
@@ -108,32 +107,46 @@ async def main(phone):
             dexlink = weblink = telelink = tweetlink = "Not Found"
             if len(links) != 0:
                 for link in links:
-                    if "twitter" in link:
-                        tweetlink = link
-                    elif 'dextools' in link or 'dextools' in link:
+                    if 'dextools' in link or 'dexscreener' in link:
                         dexlink = link
                         print("dexlink = ", dexlink)
+                    elif "twitter" in link:
+                        tweetlink = link
                     elif 't.me' in link:
                         telelink = link
                         print("telelink = ", telelink)
                     elif '.com' in link:
                         weblink = link
                         print("websitelink = ", weblink)
-                a = INSERT_COIN_DATA_TO_TABLE.format(
-                    token=token,
-                    dexlink=dexlink,
-                    telelink=telelink,
-                    weblink=weblink,
-                    twitterlink=tweetlink
-                )
-                # db.execute_query(a)
-                print("Data inserted")
+                dex_pair_id = get_pair_id_from_dex(dexlink)
+                print("dex_pair_id = ", dex_pair_id)
+                token_symbol = get_token_symbol(dex_pair_id)
+
+                # if token_symbol not in tweetlink:
+                #     twitterlink = "Not Found"
+                # if token_symbol not in telelink:
+                #     telelink = "Not Found"
+                # if token_symbol not in weblink:
+                #     weblink = "Not Found"
+
+                # print("token_symbol", token_symbol)
+                # if token_symbol != "Not_Found":
+                #     a = INSERT_COIN_DATA_TO_TABLE.format(
+                #         token=token_symbol,
+                #         dexlink=dexlink,
+                #         telelink=telelink,
+                #         weblink=weblink,
+                #         twitterlink=tweetlink,
+                #     )
+                #     db.execute_query(a)
+                #     print("Data inserted")
             else:
                 print("No link found in the message")
             # print the message is not text
             if len(textty) == 0:
                 print("Ye non text hai, chup chaap text bhejo")
             print("\n")
+            print(client.get_entity(PeerChannel(textty.chat_id)))
 
         await client.run_until_disconnected()
 
@@ -141,9 +154,6 @@ async def main(phone):
         print(e, "Some error occured")
         pass
 
-
-# client.start()
-# client.run_until_disconnected(main(phone))
 
 with client:
     client.loop.run_until_complete(main(phone))

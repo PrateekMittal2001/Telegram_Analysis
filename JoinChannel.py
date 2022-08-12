@@ -1,5 +1,9 @@
+import asyncio
+
 from telethon import TelegramClient
-from telethon.errors import SessionPasswordNeededError
+from telethon.errors import SessionPasswordNeededError, FloodWaitError
+from telethon.tl.functions.channels import JoinChannelRequest
+
 from constants import *
 from configuration_data import *
 from db_connection import *
@@ -8,6 +12,19 @@ from db_connection import *
 client = TelegramClient(username, api_id, api_hash)
 
 db = Database(user="root", password="", host="localhost", port=3306, db_name="twitter_bot")
+
+
+async def join_channel(channel):
+    try:
+        client.flood_sleep_threshold = 0  # Don't auto-sleep
+        await client(JoinChannelRequest(channel))
+        print("We joined : ", channel)
+        await asyncio.sleep(delay=2)
+        return True
+    except FloodWaitError as fwe:
+        print(f'Waiting for {fwe}')
+        await asyncio.sleep(delay=fwe.seconds)
+        return False
 
 
 async def main(phone):
@@ -29,9 +46,11 @@ async def main(phone):
         link_in_database = db.fetchall(GET_JOINING_LINKS)
         link_in_database = [x[0] for x in link_in_database]
         print(link_in_database, "link in database\n")
-        for link in user_channel_list:
+        for link in not_working_channel_list:
             if link in link_in_database:
                 print(link, "is in the database")
+                joining_status = join_channel(link)
+                print(bool(joining_status), "joining status")
             else:
                 print(link, "is not in the database")
                 # insert the link and joining_status as joined in the database
@@ -42,7 +61,6 @@ async def main(phone):
     except Exception as e:
         print("There some error occured", e)
         pass
-
 
 
 with client:

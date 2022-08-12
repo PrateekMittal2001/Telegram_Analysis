@@ -21,7 +21,3 @@ class Database:
         """ Execute the query and fetch all data """
         self.execute_query(query=query)
         return self.cursor.fetchall()
-
-    def commit(self):
-        """ Commit the changes """
-        self._conn.commit()

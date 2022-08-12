@@ -1,3 +1,5 @@
+import asyncio
+
 from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError
 from telethon.tl.functions.channels import GetParticipantsRequest
@@ -39,6 +41,8 @@ async def main(phone):
         limit = 100
         all_participants = []
 
+        await asyncio.sleep(2)
+
         while True:
             participants = await client(GetParticipantsRequest(
                 my_channel, ChannelParticipantsSearch(''), offset, limit,
@@ -51,10 +55,13 @@ async def main(phone):
 
         all_user_details = []
         for participant in all_participants:
+            # print(participant)
             print(participant.first_name, participant.last_name, participant.username, participant.id)
             all_user_details.append(
                 {"id": participant.id, "first_name": participant.first_name, "last_name": participant.last_name,
                  "user": participant.username, "phone": participant.phone, "is_bot": participant.bot})
+
+        print("all the user details, ", all_user_details)
 
 
 with client:

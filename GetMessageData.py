@@ -2,7 +2,9 @@ import asyncio
 
 from telethon.tl.functions.messages import GetMessagesViewsRequest
 from telethon.tl.types import PeerChannel
-
+from telethon.utils import get_input_chat_photo
+from telethon.sync import TelegramClient
+from telethon import functions, types
 from constants import *
 from configuration_data import *
 from telethon import TelegramClient
@@ -56,9 +58,10 @@ async def main(phone):
             photo_object = my_channel.photo
             print("photo: ", photo_object)
             # use getfile to get the photo
-            photo_file = await client.download_profile_photo(my_channel)
-            print("photo_file: ", photo_file)
-
+            # photo_file = await client.download_profile_photo(my_channel)
+            # print("photo_file: ", photo_file)
+            # print("This is the image:", get_input_chat_photo(my_channel))
+            await client.getFullChannelRequest(channel=my_channel)
             # print(type(my_channel.id))
             # try:
             #     channel_image = await client(GetUserPhotosRequest(
@@ -91,8 +94,3 @@ async def main(phone):
 
 with client:
     client.loop.run_until_complete(main(phone))
-
-"""
-photo=ChatPhoto(photo_id=6291846881134883456, dc_id=5, has_video=False, 
-stripped_thumb=b'\x01\x08\x08\xa1o\x85%\\\x02\xa4u\xf4\xa2\x8a*[c\xe4[\x9f')
-"""

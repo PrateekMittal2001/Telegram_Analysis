@@ -162,22 +162,16 @@ async def main(phone):
             if total_count_limit != 0 and total_messages >= total_count_limit:
                 break
 
-        for message in list_message:
-            print(f"message: {message}\n")
-        # print(list_message)
-
         # print the messages after the last message id
-        # print(list_message[0][2])
-        # if last_message_id == list_message[0][2]:
-        #     print("No new messages")
-        # else:
-        #     for message in list_message:
-        #         if message[2] > last_message_id:
-        #             print(f"message: {message}\n")
-        #             # enter the message id, message date and message to the database historical_data
-        #             ENTER_ID_DATE_MESSAGE_TO_DATABASE = "INSERT INTO historical_data (Message, message_id, date_of_message, channel_id) VALUES ('{message}', '{idd}', '{dates}' , '{ch_id}')"
-        #             db.execute_query(ENTER_ID_DATE_MESSAGE_TO_DATABASE.format(message=message[0], idd=message[2], dates=message[1], ch_id=message[3]))
-        #             print("Message inserted")
+        if len(list_message) == 0:
+            print("No new messages")
+        else:
+            for message in list_message:
+                print(f"message: {message}\n")
+                # enter the message id, message date and message to the database historical_data
+                ENTER_ID_DATE_MESSAGE_TO_DATABASE = "INSERT INTO historical_data (Message, message_id, date_of_message, channel_id) VALUES ('{message}', '{idd}', '{dates}' , '{ch_id}')"
+                db.execute_query(ENTER_ID_DATE_MESSAGE_TO_DATABASE.format(message=message[0], idd=message[2], dates=message[1], ch_id=message[3]))
+                print("Message inserted")
 
     except Exception as e:
         print("Exception : ", e)

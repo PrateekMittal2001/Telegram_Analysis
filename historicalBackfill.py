@@ -135,7 +135,7 @@ async def main(phone):
         total_count_limit = 0
         list_message = []
 
-        # await asyncio.sleep(2)
+        await asyncio.sleep(5)
 
         while True:
             try:

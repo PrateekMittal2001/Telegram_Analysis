@@ -26,7 +26,7 @@ async def main(phone):
     me = await client.get_me()
 
     # iterate over the list of channels
-    for channel_name in user_channel_list:
+    for channel_name in deployed_channels:
         # channel_name = user_channel_list[0]
         if channel_name.isdigit():
             entity = PeerChannel(int(channel_name))
@@ -60,24 +60,21 @@ async def main(phone):
             print("Gigagroup:", my_channel.gigagroup)
 
             # print the channel title
-            print("\nchannel name = ", channel_data2.chats[0].title)
-
-            # print the number of users in the channel
-            print(f"number of participants = {number_of_participants}")
+            print("channel name = ", channel_data2.chats[0].title)
 
             # print the date of creation of the channel
             print(f"date of creation = {date_of_creation}")
 
             # print the chat id of the channel
-            print(f"chat id = {my_channel.id}")
+            print(f"chat id = {my_channel.id}\n")
 
-            async for dialog in client.iter_dialogs(
-                    limit=None,
-            ):
-                print(f"dialog = {dialog}")
-                if dialog.is_channel and dialog in user_channel_list:
-                    print("dialoggg:  ", dialog.name)
-                    print("Number of peeps: ", dialog.entity.participants_count)
+            # async for dialog in client.iter_dialogs(
+            #         limit=None,
+            # ):
+            #     print(f"dialog = {dialog}")
+            #     if dialog.is_channel and dialog in user_channel_list:
+            #         print("dialoggg:  ", dialog.name)
+            #         print("Number of peeps: ", dialog.entity.participants_count)
 
         except Exception as e:
             print("Exception : ", e)

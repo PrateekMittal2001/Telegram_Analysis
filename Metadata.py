@@ -1,4 +1,6 @@
 import asyncio
+import requests as requests
+import time
 
 from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError
@@ -6,9 +8,37 @@ from telethon.tl.functions.channels import GetFullChannelRequest, GetChannelsReq
 from telethon.tl.types import (PeerChannel)
 from configuration_data import *
 from constants import *
+from db_connection import *
 
 # Create the client and connect
 client = TelegramClient(username, api_id, api_hash)
+
+db = Database(user="root", password="", host="localhost", port=3306, db_name="twitter_bot")
+
+
+def get_number_of_subscribers(channel):
+    channel_name = channel.split('/')
+    channel_name = channel_name[-1]
+    # sleep for 2 seconds
+    time.sleep(2)
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/getChatMemberCount?chat_id=@{channel_name}"
+    response = requests.get(url=url).json()
+    print(response)
+    while True:
+        if response['ok']:
+            print(f"INFO: Member count of channel {channel_name} is {response['result']}")
+            break
+        elif response['error_code'] == 400:
+            print(f"ERROR: Channel not found for {channel_name}")
+            break
+        elif response['error_code'] == 429:
+            print(f"ERROR: {response['description']}")
+            break
+        else:
+            print(f"ERROR: {response['description']}")
+            break
+
+    return response['result']
 
 
 async def main(phone):
@@ -35,46 +65,61 @@ async def main(phone):
         try:
             my_channel = await client.get_entity(entity)
 
-            await asyncio.sleep(4)
             channel_data = await client(GetFullChannelRequest(
                 channel='my_channel'
             ))
-
-            # print("channel_data", channel_data)
-            number_of_participants = channel_data.full_chat.participants_count
-            date_of_creation = channel_data.chats[0].date
 
             channel_data2 = await client(GetChannelsRequest(
                 id=[my_channel.id]
             ))
 
-            # print(channel_data2)
+            print("channel_data1: ", channel_data)
+            print("channel_data2: ", channel_data2)
 
             # print the megagroup status
             print("Megagroup:", my_channel.megagroup)
-
             # print the broadcast status
             print("Broadcast:", my_channel.broadcast)
-
             # print the gigagroup
             print("Gigagroup:", my_channel.gigagroup)
 
+            channel_status = 0
+            if my_channel.megagroup:
+                channel_status = "Group"
+            elif my_channel.broadcast:
+                channel_status = "Channel"
+
             # print the channel title
             print("channel name = ", channel_data2.chats[0].title)
-
             # print the date of creation of the channel
+            date_of_creation = channel_data.chats[0].date
             print(f"date of creation = {date_of_creation}")
-
             # print the chat id of the channel
             print(f"chat id = {my_channel.id}\n")
 
-            # async for dialog in client.iter_dialogs(
-            #         limit=None,
-            # ):
-            #     print(f"dialog = {dialog}")
-            #     if dialog.is_channel and dialog in user_channel_list:
-            #         print("dialoggg:  ", dialog.name)
-            #         print("Number of peeps: ", dialog.entity.participants_count)
+            # print the number of participants in the channel
+            number_of_participants = get_number_of_subscribers(channel_name)
+            print(f"number of participants = {number_of_participants}")
+
+            if number_of_participants > 0:
+                # enter the channel and get the member count to the database metadata
+                ENTER_CHANNEL_SUBSCRIBERS_COUNT = "INSERT INTO metadata (channel_name, number_of_subscribers, channel_or_group, time_updated) VALUES ('{channel_name}', '{number_of_subscribers}', '{channel_or_group}', '{time_updated}')"
+                db.execute_query(ENTER_CHANNEL_SUBSCRIBERS_COUNT.format(channel_name=channel_name,
+                                                                        number_of_subscribers=number_of_participants,
+                                                                        channel_or_group=channel_status,
+                                                                        time_updated=date_of_creation))
+                print(f"INFO: Member count of channel {channel_name} is {number_of_participants} and is added to the database.")
+
+            else:
+                ENTER_CHANNEL_SUBSCRIBERS_COUNT = "INSERT INTO metadata (channel_name, number_of_subscribers, channel_or_group, time_updated) VALUES ('{channel_name}', '{number_of_subscribers}', '{channel_or_group}', '{time_updated}');"
+                db.execute_query(ENTER_CHANNEL_SUBSCRIBERS_COUNT.format(channel_name=channel_name,
+                                                                        number_of_subscribers=number_of_participants,
+                                                                        channel_or_group=channel_status,
+                                                                        time_updated=date_of_creation))
+            print(f"INFO: Member count of channel {channel_name} is {number_of_participants} and is NOT added to the database.")
+
+            # sleep for 4 seconds
+            time.sleep(4)
 
         except Exception as e:
             print("Exception : ", e)
